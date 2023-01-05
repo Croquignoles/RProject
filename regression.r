@@ -3,29 +3,35 @@ attach(donneesProjet)
 
 library(GGally)
 library(performance)
+
 ggpairs(donneesProjet)
 
+
 # Fortes correlations ( <0.85 )
-# W eigh  : 4     with /chest /abdomen /hip /thigh
-# Chest : 2      with /weight /abdoment
-# Abdomen : 3    with /weight /chest /hip
-# Hip : 3        with /weight /abdomen /thigh
-# Thigh : 2      with /weight /hip
+# Weigh  : 4     with /chest /abdomen /hip /thigh
+# Chest : 2      with /weigh /abdomen
+# Abdomen : 3    with /weigh /chest /hip
+# Hip : 3        with /weigh /abdomen /thigh
+
+
+# Thigh : 2      with /weigh /hip
+
+
 
 #Plusieurs corrélations ainsi simplification u modèle à l'aide d'une régression multiple intéressante
 
 #Utilisation de la méthode step
 
-#step ascendant
+#Step Ascendant
 res1 <- lm(Pct.BF ~ 1)
-step(res, ~ Age + Weight + Height + Neck + Chest + Abdomen + Hip + Thigh + Knee + Ankle + Bicep + Forearm + Wrist)
+step(res1, ~ Age + Weight + Height + Neck + Chest + Abdomen + Hip + Thigh + Knee + Ankle + Bicep + Forearm + Wrist)
 res1 <- lm(formula = Pct.BF ~ Abdomen + Weight + Wrist + Bicep + Age + Thigh)
 summary(res1)
 check_model(res1)
-check_normality(res2)
-check_heteroscedasticity(res2)
+check_normality(res1)
+check_heteroscedasticity(res1)
 
-#step descendant
+#Step Descendant
 res2 <- lm(Pct.BF ~ Age + Weight + Height + Neck + Chest + Abdomen + Hip + Thigh + Knee + Ankle + Bicep + Forearm + Wrist)
 step(res2)
 res2 <- lm(formula = Pct.BF ~ Age + Height + Neck + Abdomen + Hip + Thigh + Forearm + Wrist)
@@ -52,17 +58,16 @@ shapiro.test(res$residuals)
 
 plot(res1$fitted, res1$residuals) # graphique des valeurs predites versus les residus
 abline(h = 0, col = 2)
+hist(res1$residuals)
 
-strangeOnes <- which(res1$residuals > 10 | res1$residuals < -10)
-strangeOnes
-newData <- donneesProjet[-strangeOnes,]
+outLiners <- which(res1$residuals > 10 | res1$residuals < -10)
+outLiners
+newData <- donneesProjet[-outLiners,]
 
-res3 <- lm(Pct.BF ~ Age + Weight + Height + Neck + Chest + Abdomen + Hip + Thigh + Knee + Ankle + Bicep + Forearm + Wrist, data = newData)
-step(res3)
+res3 <- lm(Pct.BF ~ Age + Height + Neck + Abdomen + Hip + Thigh + Forearm + Wrist, data = newData)
+step(res3, ~ Age + Weight + Height + Neck + Chest + Abdomen + Hip + Thigh + Knee + Ankle + Bicep + Forearm + Wrist, data = newData)
 res3 <- lm(formula = Pct.BF ~ Age + Height + Neck + Abdomen + Hip + Thigh + Forearm + Wrist, data = newData)
 
-summary(res1)
-summary(res2)
 summary(res3)
 check_model(res3)
 check_normality(res3)
@@ -77,6 +82,4 @@ hist(res3$residuals)
 plot(res3$fitted, res3$residuals, pch = " ")
 text(res3$fitted, res3$residuals, dimnames(donneesProjet)[[1]])
 abline(h = 0, col = 2)
-abline(h = 10, col = 2)
-abline(h = -10, col = 2)
 

@@ -1,5 +1,5 @@
-install.packages("FactoMineR")
-install.packages("factoextra")
+install.packages("FactoMineR", dependencies = TRUE)
+install.packages("factoextra", dependencies = TRUE)
 install.packages("corrplot")
 
 library("FactoMineR")
@@ -8,6 +8,7 @@ library("corrplot")
 
 load("donneesProjet2A.RData")
 attach(donneesProjet)
+length(donneesProjet[, 1])
 
 # Statistique Unidimensionnel
 summary(donneesProjet)
