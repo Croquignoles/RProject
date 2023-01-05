@@ -14,24 +14,10 @@ length(donneesProjet[, 1])
 summary(donneesProjet)
 
 # Statistic Bidimensionnel
-plot(donneesProjet[, 1:14])
+library(GGally)
+ggpairs(donneesProjet)
 
-# plot(Pct.BF ~ Age)
-# plot(Pct.BF ~ Weight)
-# plot(Pct.BF ~ Height)
-# plot(Pct.BF ~ Neck)
-# plot(Pct.BF ~ Chest)
-# plot(Pct.BF ~ Abdomen)
-# plot(Pct.BF ~ Hip)
-# plot(Pct.BF ~ Thigh)
-# plot(Pct.BF ~ Knee)
-# plot(Pct.BF ~ Ankle)
-# plot(Pct.BF ~ Bicep)
-# plot(Pct.BF ~ Forearm)
-# plot(Pct.BF ~ Wrist)
-
-
-
+#ACP
 res_pca <- PCA(donneesProjet, graph = FALSE)
 
 eig_val <- get_eigenvalue(res_pca)
